@@ -1,0 +1,68 @@
+System Requirements:
+1. The system should have 3 main roles:
+   - Owner (Admin)
+   - Teacher
+   - Student (with parent contact info)
+
+2. Features by Role:
+   - **Owner (Admin):**
+     - Add, edit, and delete Students, Teachers, and Classes.
+     - Assign teachers to classes.
+     - View all attendance, payments, and income reports.
+     - Generate unique QR codes for each student.
+     - View and update student fee payments.
+     - Send automatic SMS notifications to parents when:
+       - The student attends class.
+       - The student pays fees.
+     - Create login access for teachers.
+     - View and export attendance and income reports.
+
+   - **Teacher:**
+     - Log in with their credentials.
+     - Scan student QR codes to mark attendance.
+     - When a student is scanned, system should:
+         - Mark attendance for that student.
+         - Automatically send SMS: “Your child [Name] has arrived for [Class Name].”
+     - View daily attendance list for their classes.
+     - See number of students who attended and total income for the day.
+
+   - **Student:**
+     - Each student has a unique QR code generated on registration.
+     - System stores student info, assigned class, and parent contact details.
+     - Attendance and payment history should be viewable by owner/teacher.
+
+3. **Additional Functionalities:**
+   - Show which class each student’s fee is paid for.
+   - When payment is made → update system and send SMS: “Your child’s class fee for [Month] has been received.”
+   - Reporting section:
+       - Attendance summary by date/class/student.
+       - Monthly and daily income reports.
+       - Outstanding (unpaid) student report.
+       - Teacher earnings summary.
+
+4. **Tech Stack:**
+   - **Frontend:** React + TailwindCSS
+   - **Backend:** Django REST Framework
+   - **Database:** SQLite
+   - **Authentication:** JWT Authentication
+   - **QR Code Generation:** Python `qrcode` library
+   - **QR Code Scanning:** React `react-qr-reader` package
+   - **SMS Integration:** Twilio API for sending SMS to parents
+
+5. **System Flow Example:**
+   - Owner registers student → system generates QR code → print/save.
+   - Teacher scans QR → attendance saved → parent notified.
+   - Owner/teacher updates payment → parent notified.
+   - Owner views reports and income dashboard.
+
+6. **Design Notes:**
+   - Use modern UI with TailwindCSS and shadcn components.
+   - Separate dashboards for Owner and Teacher.
+   - Clean navigation bar with options for:
+       - Students
+       - Teachers
+       - Classes
+       - Attendance
+       - Payments
+       - Reports
+   - Each page should be responsive and professional.

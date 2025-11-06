@@ -54,3 +54,8 @@ class TeacherCreateView(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(role='teacher')
+
+class TeacherDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.filter(role='teacher')
+    serializer_class = TeacherSerializer
+    permission_classes = (IsOwner,)

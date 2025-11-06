@@ -20,6 +20,7 @@ function Sidebar({ role, onLogout }) {
     { path: '/owner/classes', icon: BookOpen, label: 'Classes' },
     { path: '/owner/payments', icon: DollarSign, label: 'Payments' },
     { path: '/owner/reports', icon: BarChart3, label: 'Reports' },
+    { path: '/owner/scan', icon: UserCheck, label: 'Scan QR Code' },
   ]
   
   const teacherNavItems = [

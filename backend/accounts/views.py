@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model, authenticate
-from .serializers import RegisterSerializer, UserSerializer, TeacherSerializer
+from .serializers import RegisterSerializer, UserSerializer, TeacherSerializer, TeacherCreateSerializer
 from .permissions import IsOwner
 
 User = get_user_model()
@@ -49,11 +49,8 @@ class TeacherListView(generics.ListAPIView):
 
 class TeacherCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    serializer_class = TeacherCreateSerializer
     permission_classes = (IsOwner,)
-    
-    def perform_create(self, serializer):
-        serializer.save(role='teacher')
 
 class TeacherDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.filter(role='teacher')

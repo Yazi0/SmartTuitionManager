@@ -25,7 +25,7 @@ function Teachers() {
   
   const fetchTeachers = async () => {
     try {
-      const response = await api.get('/accounts/teachers/')
+      const response = await api.get('/auth/teachers/')
       setTeachers(response.data)
       setLoading(false)
     } catch (error) {
@@ -43,9 +43,9 @@ function Teachers() {
     e.preventDefault()
     try {
       if (selectedTeacher) {
-        await api.put(`/accounts/teachers/${selectedTeacher.id}/`, formData)
+        await api.put(`/auth/teachers/${selectedTeacher.id}/`, formData)
       } else {
-        await api.post('/accounts/teachers/create/', formData)
+        await api.post('/auth/teachers/create/', formData)
       }
       fetchTeachers()
       closeModal()
@@ -71,7 +71,7 @@ function Teachers() {
   const handleDelete = async (teacher) => {
     if (window.confirm(`Are you sure you want to delete ${teacher.first_name} ${teacher.last_name}?`)) {
       try {
-        await api.delete(`/accounts/teachers/${teacher.id}/`)
+        await api.delete(`/auth/teachers/${teacher.id}/`)
         fetchTeachers()
       } catch (error) {
         console.error('Error deleting teacher:', error)

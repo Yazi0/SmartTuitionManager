@@ -7,6 +7,7 @@ import Teachers from './Teachers'
 import Classes from './Classes'
 import Payments from './Payments'
 import Reports from './Reports'
+import QRScanner from './QRScanner'
 
 function OwnerDashboard() {
   const { user, logout } = useAuth()
@@ -29,6 +30,7 @@ function OwnerDashboard() {
           <Route path="classes" element={<Classes />} />
           <Route path="payments" element={<Payments />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="scan" element={<QRScanner />} />
         </Routes>
       </div>
     </div>

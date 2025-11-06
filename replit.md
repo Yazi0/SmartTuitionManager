@@ -4,7 +4,7 @@
 A comprehensive Student Management System with role-based access control, QR code-based attendance tracking, payment management, and SMS notifications.
 
 **Status:** Complete and fully functional ✅  
-**Last Updated:** November 6, 2025
+**Last Updated:** November 6, 2025 - Enhanced QR Scanner with Student Details Display
 
 ---
 
@@ -16,13 +16,17 @@ A comprehensive Student Management System with role-based access control, QR cod
 - Protected routes based on user roles
 
 ### Student Management
-- Full CRUD operations for student records
+- Full CRUD operations for student records (no login required for students)
+- Students are records only - no username/password needed
 - Auto-generated QR codes for each student (format: `STUDENT:{id}:{name}`)
+- QR codes generate automatically when student is created
 - Student profile with contact information
 - View and download student QR codes
 
 ### Teacher Management  
 - Complete CRUD operations for teacher accounts
+- Teachers have login credentials (username/password)
+- Owner can create and manage teacher accounts
 - Edit teacher profiles (username, name, email, phone)
 - Role-based permissions (teachers can only view, owners can manage)
 
@@ -33,10 +37,13 @@ A comprehensive Student Management System with role-based access control, QR cod
 - Class schedules and details
 
 ### Attendance Tracking
-- QR code scanner for teachers (mobile-optimized)
+- QR code scanner for teachers and owners (mobile-optimized)
 - Scan student QR codes to mark attendance
-- Real-time attendance recording
+- Real-time attendance recording with loading feedback
+- Detailed student information modal after QR scan
+- Display comprehensive student details: personal info, contact, class assignment, QR code
 - Attendance history and reports
+- Automatic SMS notifications to parents
 
 ### Payment Management
 - Track monthly tuition payments
@@ -81,6 +88,7 @@ A comprehensive Student Management System with role-based access control, QR cod
 ### Owner (Admin)
 - Full access to all features
 - Manage students, teachers, classes, payments
+- Scan QR codes to view student details and mark attendance
 - View all reports and analytics
 - System configuration
 
@@ -91,10 +99,10 @@ A comprehensive Student Management System with role-based access control, QR cod
 - Access attendance reports
 
 ### Student
-- View personal information
-- View class enrollment
-- View payment history
-- View attendance records
+- Students do not have login access
+- Student information is managed by owners
+- QR codes used for attendance tracking
+- Parents receive SMS notifications
 
 ---
 
@@ -125,8 +133,9 @@ A comprehensive Student Management System with role-based access control, QR cod
 - `frontend/src/pages/Teachers.jsx` - Teacher management  
 - `frontend/src/pages/Classes.jsx` - Class management
 - `frontend/src/pages/Payments.jsx` - Payment tracking
-- `frontend/src/pages/QRScanner.jsx` - Attendance scanner
+- `frontend/src/pages/QRScanner.jsx` - QR code scanner with attendance marking
 - `frontend/src/pages/Reports.jsx` - Analytics dashboard
+- `frontend/src/components/StudentDetailsModal.jsx` - Comprehensive student info display
 - `frontend/src/components/` - Reusable UI components
 
 ### Database Schema

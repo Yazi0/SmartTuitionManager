@@ -37,7 +37,7 @@ function Classes() {
   
   const fetchTeachers = async () => {
     try {
-      const response = await api.get('/accounts/teachers/')
+      const response = await api.get('/auth/teachers/')
       setTeachers(response.data)
     } catch (error) {
       console.error('Error fetching teachers:', error)

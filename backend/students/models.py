@@ -7,11 +7,6 @@ from PIL import Image
 import os
 
 class Student(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE,
-        limit_choices_to={'role': 'student'}
-    )
     full_name = models.CharField(max_length=200)
     date_of_birth = models.DateField()
     parent_name = models.CharField(max_length=200)
@@ -22,6 +17,7 @@ class Student(models.Model):
         'classes.Class', 
         on_delete=models.SET_NULL, 
         null=True, 
+        blank=True,
         related_name='students'
     )
     qr_code = models.ImageField(upload_to='qr_codes/', blank=True)

@@ -13,9 +13,6 @@ function Students() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    first_name: '',
     full_name: '',
     date_of_birth: '',
     parent_name: '',
@@ -74,9 +71,6 @@ function Students() {
   const handleEdit = (student) => {
     setSelectedStudent(student)
     setFormData({
-      username: student.user.username,
-      password: '',
-      first_name: student.user.first_name,
       full_name: student.full_name,
       date_of_birth: student.date_of_birth,
       parent_name: student.parent_name,
@@ -109,9 +103,6 @@ function Students() {
     setIsModalOpen(false)
     setSelectedStudent(null)
     setFormData({
-      username: '',
-      password: '',
-      first_name: '',
       full_name: '',
       date_of_birth: '',
       parent_name: '',
@@ -174,52 +165,7 @@ function Students() {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Username *
-              </label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-                disabled={selectedStudent}
-              />
-            </div>
-            
-            {!selectedStudent && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password *
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-            )}
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name *
-              </label>
-              <input
-                type="text"
-                name="first_name"
-                value={formData.first_name}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            
-            <div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name *
               </label>
@@ -230,6 +176,7 @@ function Students() {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+                placeholder="Enter student's full name"
               />
             </div>
             

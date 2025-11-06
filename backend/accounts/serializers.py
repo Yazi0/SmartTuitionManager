@@ -33,8 +33,8 @@ class TeacherSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'phone', 'password']
-        read_only_fields = ['id']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'phone', 'password', 'role']
+        read_only_fields = ['id', 'role']
     
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
@@ -47,3 +47,22 @@ class TeacherSerializer(serializers.ModelSerializer):
         
         instance.save()
         return instance
+
+class TeacherCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'first_name', 'last_name', 'phone']
+    
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data.get('email', ''),
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            phone=validated_data.get('phone', ''),
+            role='teacher'
+        )
+        return user

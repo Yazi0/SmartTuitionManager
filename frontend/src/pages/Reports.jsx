@@ -21,7 +21,7 @@ function Reports() {
     try {
       const [students, teachers, classes, payments, attendance] = await Promise.all([
         api.get('/students/'),
-        api.get('/accounts/teachers/'),
+        api.get('/auth/teachers/'),
         api.get('/classes/'),
         api.get('/payments/'),
         api.get('/attendance/daily-report/')

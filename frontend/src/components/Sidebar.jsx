@@ -25,7 +25,6 @@ function Sidebar({ role, onLogout }) {
   
   const teacherNavItems = [
     { path: '/teacher', icon: Home, label: 'Dashboard' },
-    { path: '/teacher/scan', icon: UserCheck, label: 'Scan QR Code' },
     { path: '/teacher/attendance', icon: BarChart3, label: 'Attendance' },
   ]
   

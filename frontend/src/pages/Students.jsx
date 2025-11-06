@@ -290,12 +290,12 @@ function Students() {
             {selectedStudent.qr_code ? (
               <div>
                 <img 
-                  src={`http://localhost:8000${selectedStudent.qr_code}`}
+                  src={selectedStudent.qr_code}
                   alt="Student QR Code"
                   className="mx-auto mb-4 border-2 border-gray-300 rounded p-4"
                 />
                 <a
-                  href={`http://localhost:8000${selectedStudent.qr_code}`}
+                  href={selectedStudent.qr_code}
                   download={`${selectedStudent.full_name}_QR.png`}
                   className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800"
                 >

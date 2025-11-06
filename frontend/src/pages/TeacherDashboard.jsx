@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
-import QRScanner from './QRScanner'
+import TeacherHome from './TeacherHome'
 import Reports from './Reports'
 
 function TeacherDashboard() {
@@ -20,8 +20,7 @@ function TeacherDashboard() {
       
       <div className="flex-1 overflow-auto">
         <Routes>
-          <Route index element={<Reports />} />
-          <Route path="scan" element={<QRScanner />} />
+          <Route index element={<TeacherHome />} />
           <Route path="attendance" element={<Reports />} />
         </Routes>
       </div>

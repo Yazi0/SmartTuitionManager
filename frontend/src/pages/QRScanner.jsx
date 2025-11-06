@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { QrReader } from 'react-qr-reader'
 import { Camera, CheckCircle, XCircle } from 'lucide-react'
 import api from '../utils/api'
@@ -11,43 +11,70 @@ function QRScanner() {
   const [studentDetails, setStudentDetails] = useState(null)
   const [attendanceData, setAttendanceData] = useState(null)
   const [loading, setLoading] = useState(false)
+  const lastScannedRef = useRef(null)
+  const scanTimeoutRef = useRef(null)
   
   const handleScan = async (result) => {
-    if (result) {
-      try {
-        setScanning(false)
-        setLoading(true)
-        
-        const response = await api.post('/attendance/mark/', {
-          qr_data: result.text
-        })
-        
-        const studentId = response.data.student?.id || response.data.student_id
-        
-        if (studentId) {
-          const studentResponse = await api.get(`/students/${studentId}/`)
-          setStudentDetails(studentResponse.data)
-          setAttendanceData(response.data)
+    if (!result || !result.text || loading) return
+    
+    if (lastScannedRef.current === result.text) {
+      return
+    }
+    
+    if (scanTimeoutRef.current) {
+      clearTimeout(scanTimeoutRef.current)
+    }
+    
+    lastScannedRef.current = result.text
+    
+    try {
+      setScanning(false)
+      setLoading(true)
+      
+      const response = await api.post('/attendance/mark/', {
+        qr_data: result.text
+      })
+      
+      let studentId = response.data.student?.id || response.data.student_id
+      
+      if (!studentId && result.text.startsWith('STUDENT:')) {
+        const parts = result.text.split(':')
+        if (parts.length >= 2) {
+          studentId = parseInt(parts[1])
         }
-        
-        setResult({
-          success: true,
-          message: 'Attendance marked successfully!',
-          data: response.data
-        })
-        setError(null)
-        setLoading(false)
-      } catch (err) {
-        setLoading(false)
-        const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Failed to mark attendance'
-        setError(errorMessage)
-        setResult(null)
-        
-        setTimeout(() => {
-          setError(null)
-          setScanning(true)
-        }, 3000)
       }
+      
+      if (studentId) {
+        const studentResponse = await api.get(`/students/${studentId}/`)
+        setStudentDetails(studentResponse.data)
+        setAttendanceData(response.data)
+      }
+      
+      const message = response.data.message || 'Attendance marked successfully!'
+      
+      setResult({
+        success: true,
+        message: message,
+        data: response.data
+      })
+      setError(null)
+      setLoading(false)
+      
+      scanTimeoutRef.current = setTimeout(() => {
+        lastScannedRef.current = null
+      }, 5000)
+      
+    } catch (err) {
+      setLoading(false)
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Failed to mark attendance'
+      setError(errorMessage)
+      setResult(null)
+      lastScannedRef.current = null
+      
+      setTimeout(() => {
+        setError(null)
+        setScanning(true)
+      }, 3000)
     }
   }
   

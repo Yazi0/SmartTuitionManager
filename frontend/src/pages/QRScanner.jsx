@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { QrReader } from 'react-qr-reader'
+import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import { Camera, CheckCircle, XCircle } from 'lucide-react'
 import api from '../utils/api'
 import StudentDetailsModal from '../components/StudentDetailsModal'
@@ -13,93 +13,104 @@ function QRScanner() {
   const [loading, setLoading] = useState(false)
   const lastScannedRef = useRef(null)
   const scanTimeoutRef = useRef(null)
-  
-  const handleScan = async (result) => {
-    if (!result || !result.text || loading) return
-    
-    if (lastScannedRef.current === result.text) {
-      return
+
+  const handleScan = async (text) => {
+    if (!text || loading) return;
+
+    if (lastScannedRef.current === text) {
+      return;
     }
-    
+
     if (scanTimeoutRef.current) {
-      clearTimeout(scanTimeoutRef.current)
+      clearTimeout(scanTimeoutRef.current);
     }
-    
-    lastScannedRef.current = result.text
-    
+
+    lastScannedRef.current = text;
+
     try {
-      setScanning(false)
-      setLoading(true)
-      
+      setScanning(false);
+      setLoading(true);
+
       const response = await api.post('/attendance/mark/', {
-        qr_data: result.text
-      })
-      
-      let studentId = response.data.student?.id || response.data.student_id
-      
-      if (!studentId && result.text.startsWith('STUDENT:')) {
-        const parts = result.text.split(':')
+        qr_data: text
+      });
+
+      let studentId =
+        response.data.student?.id || response.data.student_id;
+
+      if (!studentId && text.startsWith('STUDENT:')) {
+        const parts = text.split(':');
         if (parts.length >= 2) {
-          studentId = parseInt(parts[1])
+          studentId = parseInt(parts[1]);
         }
       }
-      
+
       if (studentId) {
-        const studentResponse = await api.get(`/students/${studentId}/`)
-        setStudentDetails(studentResponse.data)
-        setAttendanceData(response.data)
+        const studentResponse = await api.get(`/students/${studentId}/`);
+        setStudentDetails(studentResponse.data);
+        setAttendanceData(response.data);
       }
-      
-      const message = response.data.message || 'Attendance marked successfully!'
-      
+
+      const message =
+        response.data.message || 'Attendance marked successfully!';
+
       setResult({
         success: true,
         message: message,
         data: response.data
-      })
-      setError(null)
-      setLoading(false)
-      
+      });
+
+      setError(null);
+      setLoading(false);
+
       scanTimeoutRef.current = setTimeout(() => {
-        lastScannedRef.current = null
-      }, 5000)
-      
+        lastScannedRef.current = null;
+      }, 5000);
+
     } catch (err) {
-      setLoading(false)
-      const errorMessage = err.response?.data?.message || err.response?.data?.error || 'Failed to mark attendance'
-      setError(errorMessage)
-      setResult(null)
-      lastScannedRef.current = null
-      
+      setLoading(false);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        'Failed to mark attendance';
+
+      setError(errorMessage);
+      setResult(null);
+      lastScannedRef.current = null;
+
       setTimeout(() => {
-        setError(null)
-        setScanning(true)
-      }, 3000)
+        setError(null);
+        setScanning(true);
+      }, 3000);
     }
-  }
-  
+  };
+
   const handleCloseModal = () => {
-    setStudentDetails(null)
-    setAttendanceData(null)
-    setResult(null)
-    setLoading(false)
-    setScanning(true)
-  }
-  
+    setStudentDetails(null);
+    setAttendanceData(null);
+    setResult(null);
+    setLoading(false);
+    setScanning(true);
+  };
+
   const handleError = (err) => {
-    console.error('QR Scanner Error:', err)
-    setError('Camera error. Please check permissions.')
-  }
-  
+    console.error("QR Scanner Error:", err);
+    setError("Camera error. Please check permissions.");
+  };
+
   return (
     <>
       <div className="p-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Scan Student QR Code</h1>
-            <p className="text-gray-600">Scan student QR codes to mark attendance and view details</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Scan Student QR Code
+            </h1>
+            <p className="text-gray-600">
+              Scan student QR codes to mark attendance and view details
+            </p>
           </div>
-          
+
           <div className="bg-white rounded-lg shadow-lg p-6">
             {!scanning && !result && !error && (
               <div className="text-center py-12">
@@ -112,14 +123,19 @@ function QRScanner() {
                 </button>
               </div>
             )}
-            
+
             {scanning && (
               <div>
-                <QrReader
-                  onResult={handleScan}
-                  onError={handleError}
-                  constraints={{ facingMode: 'environment' }}
-                  className="w-full"
+                <BarcodeScannerComponent
+                  width={"100%"}
+                  height={350}
+                  onUpdate={(err, r) => {
+                    if (err) {
+                      handleError(err);
+                    } else if (r && r.text) {
+                      handleScan(r.text);
+                    }
+                  }}
                 />
                 <div className="mt-4 text-center">
                   <button
@@ -131,26 +147,32 @@ function QRScanner() {
                 </div>
               </div>
             )}
-            
+
             {loading && (
               <div className="text-center py-12">
                 <div className="mx-auto mb-4">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-700 mb-2">Processing...</h2>
-                <p className="text-gray-500">Marking attendance and loading student details...</p>
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                  Processing...
+                </h2>
+                <p className="text-gray-500">
+                  Marking attendance and loading student details...
+                </p>
               </div>
             )}
-            
+
             {error && (
               <div className="text-center py-12">
                 <XCircle size={64} className="mx-auto text-red-500 mb-4" />
-                <h2 className="text-2xl font-bold text-red-700 mb-2">Error</h2>
+                <h2 className="text-2xl font-bold text-red-700 mb-2">
+                  Error
+                </h2>
                 <p className="text-gray-600">{error}</p>
               </div>
             )}
           </div>
-          
+
           <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h3 className="font-semibold text-blue-900 mb-2">Instructions:</h3>
             <ul className="text-sm text-blue-800 space-y-1">
@@ -163,16 +185,16 @@ function QRScanner() {
           </div>
         </div>
       </div>
-      
+
       {studentDetails && (
-        <StudentDetailsModal 
+        <StudentDetailsModal
           student={studentDetails}
           attendance={attendanceData}
           onClose={handleCloseModal}
         />
       )}
     </>
-  )
+  );
 }
 
-export default QRScanner
+export default QRScanner;
